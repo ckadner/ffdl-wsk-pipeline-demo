@@ -1,6 +1,10 @@
-# Python byte-compiled files
 *.pyc
 __pycache__/
 
-# Environments
+.ipynb_checkpoints/
+.venv/
 virtualenv/
+
+*.npz
+model.zip
+parameters*.json

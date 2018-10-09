@@ -1,0 +1,24 @@
+cpus: 2
+data_stores:
+- connection:
+    auth_url: https://s3-api.us-geo.objectstorage.softlayer.net
+    password: '<AWS_SECRET_ACCESS_KEY>'
+    user_name: '<AWS_ACCESS_KEY_ID>'
+  id: fashion-training-files
+  training_data:
+    container: ffdl-training-data
+  training_results:
+    container: ffdl-training-results
+  type: mount_cos
+description: Training a deep learning model on the Fashion MNIST dataset using a Keras Convolutional Model on Tensorflow
+evaluation_metrics:
+  in: $JOB_STATE_DIR/logs/tb
+  type: tensorboard
+framework:
+  command: pip3 install keras; python3 convolutional_keras.py --data fashion_mnist.npz
+  name: tensorflow
+  version: 1.5.0-py3
+gpus: 0
+memory: 2Gb
+name: keras_fashion_MNIST
+version: '1.0'
