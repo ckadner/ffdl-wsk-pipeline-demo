@@ -1,0 +1,20 @@
+{
+    "public_ip": "123.45.67.89",
+    "rest_api_port": "12345",
+    "basic_authtoken": "test",
+    "watson_auth_token": "bluemix-instance-id=test-user",
+    "aws_endpoint_url": "https://s3-api.us-geo.objectstorage.softlayer.net",
+    "aws_access_key_id": "123abc_here_goes_your_access_key_id",
+    "aws_secret_access_key": "123abc_here_goes_your_secret_access_key",
+    "training_data_bucket": "training-data",
+    "training_results_bucket": "training-results",
+    "robustnesscheck_data_bucket": "robustnesscheck-data",
+    "robustnesscheck_results_bucket": "robustnesscheck-results",
+    "model_id": "training-4dKQZX2mg",
+    "dataset_file": "fashion_mnist.npz",
+    "networkdefinition_file": "keras_original_model.json",
+    "weights_file": "keras_original_model.hdf5",
+    "memory": "2Gb",
+    "cpus": 2,
+    "gpus": 0
+}
