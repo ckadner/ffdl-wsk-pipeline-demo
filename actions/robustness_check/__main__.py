@@ -6,6 +6,7 @@ import json, os, requests, sys
 def run_safe(args):
     try:
         import boto3
+        import traceback
         import zipfile
         from ruamel.yaml import YAML
 
@@ -66,7 +67,7 @@ def run_safe(args):
                           params["weights_file"])
 
             manifest_dict = {
-                "name": "art_robustness_check",
+                "name": params.get("training_job_name", "robustnesscheck_%s" % params["model_id"]),
                 "description": "Generates adversarial samples to check model robustness using FGM",
                 "version": "1.0",
                 "memory": params.get("memory", "2Gb"),
@@ -104,7 +105,7 @@ def run_safe(args):
                 yaml.dump(manifest_dict, f)
 
         def start_robustness_check(params):
-            url = "http://%s:%s/v1/models?version=2017-02-13" % (params["public_ip"], params["rest_api_port"])
+            url = "%s/v1/models?version=2017-02-13" % params["ffdl_service_url"]
             headers = {"Accept": "application/json",
                        "Authorization": params["basic_authtoken"],
                        "X-Watson-Userinfo": params["watson_auth_token"]}
@@ -121,9 +122,16 @@ def run_safe(args):
         copy_training_result_files(cos, args)
         return start_robustness_check(args)
     except Exception as e:
+        # print('%s: %s\n%s' % (e.__class__.__name__, str(e), traceback.format_exc()))
         return {
-            "error": str(e)
+            "Status": "Error",
+            "Details": {
+                "Error": e.__class__.__name__,
+                "Message": str(e),
+                "Trace": traceback.format_exc()
+            }
         }
+
 
 
 # main() method will be run when this action gets invoked

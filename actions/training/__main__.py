@@ -3,7 +3,7 @@
 
 def run_safe(parameters):
     try:
-        import boto3, json, requests, os, sys
+        import boto3, json, requests, os, sys, traceback
 
         def download_files_from_s3(params):
             cos = boto3.resource("s3",
@@ -15,7 +15,7 @@ def run_safe(parameters):
             bucket.download_file("manifest.yml", "manifest.yml")
 
         def train_model(params):
-            url = "http://%s:%s/v1/models?version=2017-02-13" % (params["public_ip"], params["rest_api_port"])
+            url = "%s/v1/models?version=2017-02-13" % params["ffdl_service_url"]
             headers = {
                 "Accept": "application/json",
                 "Authorization": params["basic_authtoken"],
@@ -31,8 +31,13 @@ def run_safe(parameters):
         result = train_model(parameters)
         return result or dict()
     except Exception as e:
+        # print('%s: %s\n%s' % (e.__class__.__name__, str(e), traceback.format_exc()))
         return {
-            "error": str(e)
+            "Status": "Error",
+            "Details": {
+                e.__class__.__name__: str(e),
+                "Trace": traceback.format_exc()
+            }
         }
 
 

@@ -1,6 +1,5 @@
 {
-    "public_ip": "123.45.67.89",
-    "rest_api_port": "12345",
+    "ffdl_service_url": "http://123.45.67.89:12345",
     "basic_authtoken": "test",
     "watson_auth_token": "bluemix-instance-id=test-user",
     "aws_endpoint_url": "https://s3-api.us-geo.objectstorage.softlayer.net",
@@ -11,6 +10,7 @@
     "robustnesscheck_data_bucket": "robustnesscheck-data",
     "robustnesscheck_results_bucket": "robustnesscheck-results",
     "model_id": "training-4dKQZX2mg",
+    "training_job_name": "robustnesscheck_training-4dKQZX2mg",
     "dataset_file": "fashion_mnist.npz",
     "networkdefinition_file": "keras_original_model.json",
     "weights_file": "keras_original_model.hdf5",

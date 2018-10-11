@@ -5,6 +5,8 @@ WSK_CLI="bx wsk"
 
 ACTION_NAME="robustness_check"
 
+WEB_SECRET="fiddle"
+
 if [ ! -d virtualenv ]; then
     virtualenv --python=python3 virtualenv
 fi
@@ -28,7 +30,12 @@ zip -r "${ACTION_NAME}.zip" \
 ${WSK_CLI} action list | grep -q "${ACTION_NAME}" && ${WSK_CLI} action delete "${ACTION_NAME}"
 
 echo "creating action ..."
-${WSK_CLI} action create "${ACTION_NAME}" --kind python-jessie:3 --main main "${ACTION_NAME}.zip" --param-file "parameters_default.json"
+${WSK_CLI} action create "${ACTION_NAME}" \
+    --kind python-jessie:3 \
+    --main main "${ACTION_NAME}.zip" \
+    --web true \
+    --web-secure "${WEB_SECRET}"
+#    --param-file "parameters_default.json"   # for web action default parameters are locked down (not overridable)
 
 # clean up
 rm -f "${ACTION_NAME}.zip"
