@@ -41,7 +41,8 @@ def run_safe(args):
             return params["robustnesscheck_results_bucket"]
 
         def copy_file(source_bucket, source_file, target_bucket, target_file):
-            target_bucket.copy({"Bucket": source_bucket.name, "Key": source_file}, target_file)
+            if source_bucket != target_bucket or source_file != target_file:
+                target_bucket.copy({"Bucket": source_bucket.name, "Key": source_file}, target_file)
 
         def copy_training_result_files(cos, params):
             model_id = params["model_id"]
@@ -71,8 +72,8 @@ def run_safe(args):
                 "description": "Generates adversarial samples to check model robustness using FGM",
                 "version": "1.0",
                 "memory": params.get("memory", "2Gb"),
-                "gpus": params.get("gpus", 0),
-                "cpus": params.get("cpus", 2),
+                "gpus": int(params.get("gpus", 0)),
+                "cpus": float(params.get("cpus", 2)),
                 "data_stores": [
                     {
                         "id": "robustness-check",
@@ -120,9 +121,18 @@ def run_safe(args):
         create_model_zip()
         create_manifest(args)
         copy_training_result_files(cos, args)
-        return start_robustness_check(args)
+        response = start_robustness_check(args)
+        # OpenWhisk/IBM Cloud Functions does not return JSON when the returned dict contains key "error"
+        if "error" in response:
+            print(response)
+            return {
+                "Status": "Error",
+                "Details": response
+            }
+        else:
+            return response
     except Exception as e:
-        # print('%s: %s\n%s' % (e.__class__.__name__, str(e), traceback.format_exc()))
+        print('%s: %s\n%s' % (e.__class__.__name__, str(e), traceback.format_exc()))
         return {
             "Status": "Error",
             "Details": {
