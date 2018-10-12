@@ -12,22 +12,22 @@ from art.attacks.fast_gradient import FastGradientMethod
 
 def get_metrics(model, x_original, x_adv_samples, y):
     scores = model.evaluate(x_original, y, verbose=0)
-    model_accuracy_on_non_adversarial_samples = scores[1] * 100
+    model_accuracy_on_non_adversarial_samples = scores[1]
 
     y_pred = model.predict(x_original, verbose=0)
     y_pred_adv = model.predict(x_adv_samples, verbose=0)
 
     scores = model.evaluate(x_adv_samples, y, verbose=0)
-    model_accuracy_on_adversarial_samples = scores[1] * 100
+    model_accuracy_on_adversarial_samples = scores[1]
 
     pert_metric = get_perturbation_metric(x_original, x_adv_samples, y_pred, y_pred_adv, ord=2)
     conf_metric = get_confidence_metric(y_pred, y_pred_adv)
 
     data = {
-        "model accuracy on test data:": model_accuracy_on_non_adversarial_samples,
-        "model accuracy on adversarial samples": model_accuracy_on_adversarial_samples,
-        "reduction in confidence": conf_metric * 100,
-        "average perturbation": pert_metric * 100
+        "model accuracy on test data:": float(model_accuracy_on_non_adversarial_samples),
+        "model accuracy on adversarial samples": float(model_accuracy_on_adversarial_samples),
+        "reduction in confidence": float(conf_metric),
+        "average perturbation": float(pert_metric)
     }
     return data
 
@@ -122,7 +122,7 @@ def main(argv):
     # obtain all metrics (robustness score, perturbation metric, reduction in confidence)
     metrics = get_metrics(model, x, x_samples, y)
 
-    print("metrics : ", metrics)
+    print("metrics: ", metrics)
 
     report_file = os.path.join(os.environ["RESULT_DIR"], "report.txt")
 
@@ -130,7 +130,7 @@ def main(argv):
         report.write(json.dumps(metrics))
 
     adv_samples_file = os.path.join(os.environ["RESULT_DIR"], 'adv_samples')
-    print("adversarial samples saved to : ", adv_samples_file)
+    print("adversarial samples saved to: ", adv_samples_file)
     np.savez(adv_samples_file, x_original=x, x_adversarial=x_samples, y=y)
 
 
