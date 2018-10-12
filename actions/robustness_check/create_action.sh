@@ -33,8 +33,7 @@ echo "creating action ..."
 ${WSK_CLI} action create "${ACTION_NAME}" \
     --kind python-jessie:3 \
     --main main "${ACTION_NAME}.zip" \
-    --web true \
-    --web-secure "${WEB_SECRET}"
+    --web true #--web-secure "${WEB_SECRET}"
 #    --param-file "parameters_default.json"   # for web action default parameters are locked down (not overridable)
 
 # clean up
