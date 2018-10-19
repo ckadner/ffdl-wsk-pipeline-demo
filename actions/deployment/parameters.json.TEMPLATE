@@ -1,0 +1,12 @@
+{
+    "public_ip": "123.45.67.89",
+    "aws_endpoint_url": "https://s3-api.us-geo.objectstorage.softlayer.net",
+    "aws_access_key_id": "123abc_here_goes_your_access_key_id",
+    "aws_secret_access_key": "123abc_here_goes_your_secret_access_key",
+    "training_results_bucket": "training-results",
+    "model_file_name": "keras_original_model.hdf5",
+    "training_id": "training-4dKQZX2mg",
+    "deployment_name": "training-4dKQZX2mg",
+    "check_status_only": false,
+    "delete_deployment": false
+}
