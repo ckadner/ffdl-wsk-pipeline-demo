@@ -11,3 +11,7 @@ parameters*.json
 
 kube-config.yml
 *.pem
+
+tmp/
+
+.DS_Store
