@@ -1,0 +1,6 @@
+{
+    "ffdl_service_url": "http://123.45.67.89:12345",
+    "basic_authtoken": "test",
+    "watson_auth_token": "bluemix-instance-id=test-user",
+    "training_id": "training-abc123"
+}
