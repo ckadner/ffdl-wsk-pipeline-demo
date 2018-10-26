@@ -1,6 +1,6 @@
 # OpenWhisk action to perform a model robustness check with ART on FfDL
 
-import json, os, requests, sys
+import json, requests
 
 
 def run_safe(args):
@@ -141,7 +141,6 @@ def run_safe(args):
                 "Trace": traceback.format_exc()
             }
         }
-
 
 
 # main() method will be run when this action gets invoked
