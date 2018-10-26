@@ -5,6 +5,8 @@ WSK_CLI="bx wsk"
 
 ACTION_NAME="training"
 
+WEB_SECRET="fiddle"
+
 if [ ! -d virtualenv ]; then
     virtualenv --python=python3 virtualenv
 fi
@@ -29,8 +31,8 @@ echo "creating action ..."
 ${WSK_CLI} action create "${ACTION_NAME}" \
     --kind python-jessie:3 \
     --main main "${ACTION_NAME}.zip" \
-    --web true --web-secure "fiddle"
-#    --param-file "parameters_default.json"   # for web action default parameters are locked down (not overridable)
+    --web true  # --web-secure "${WEB_SECRET}"  # TODO: web-secure this after fixing FfDL UI CORS issues with AngularJS
+#    --param-file "parameters_default.json"     # for web action default parameters are locked down (not overridable)
 
 # clean up
 rm -f "${ACTION_NAME}.zip"
