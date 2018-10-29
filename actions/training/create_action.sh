@@ -10,9 +10,10 @@ WEB_SECRET="fiddle"
 if [ ! -d virtualenv ]; then
     virtualenv --python=python3 virtualenv
 fi
-
 source virtualenv/bin/activate
-pip install -r requirements.txt
+
+echo "Installing Python dependencies into virtual environment ..."
+pip install -q -r requirements.txt
 
 # only include packages that are not available on IBM Cloud Functions:
 # https://raw.githubusercontent.com/ibm-functions/runtime-python/7b87b88/python3/requirements.txt
