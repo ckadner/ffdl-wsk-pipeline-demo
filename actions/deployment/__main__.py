@@ -3,6 +3,7 @@
 import json
 import logging
 import re
+import requests
 import sys
 import traceback
 
@@ -176,12 +177,28 @@ def get_pods(params):
 
 
 def get_deployment_status(params):
+    # AVAILABLE (classifier URL actually available)
+    # READY (pod status, not url availability)
+    # UNKNOWN (no pods)
+    # ERROR (CrashLoopBackOff, Succeeded - if pod terminated, will not be restarted, this should not happen)
+    # PENDING (Creating..., ContainerCreating, ContainersReady, PodScheduled, Pending, Initialized, Running)
     pods = get_pods(params)
     if not pods:
-        return get_deployment_state(params) or "UNKNOWN"
-    status_conditions = sorted(pods[0].status.conditions, key=lambda status: status.last_transition_time, reverse=True)
-    latest_status = status_conditions[0].type
-    return latest_status.upper()
+        status = get_deployment_state(params) or "Unknown"
+    else:
+        status_conditions = sorted(pods[0].status.conditions, key=lambda status: status.last_transition_time, reverse=True)
+        status = status_conditions[0].type
+
+    if status in ["Creating...", "ContainerCreating", "ContainersReady", "PodScheduled", "Initialized", "Running"]:
+        status = "Pending"
+
+    if status in ["CrashLoopBackOff", "Unschedulable", "Failed", "Succeeded"]:
+        status = "Error"
+
+    if status == "Ready" and is_deployment_available(params):
+        status = "Available"
+
+    return status.upper()
 
 
 def get_deployment_state(params):
@@ -195,13 +212,11 @@ def get_deployment_state(params):
 
     if deployment_name in [deployment["metadata"]["name"] for deployment in api_response["items"]]:
         deployed_spec = api_client.get_namespaced_custom_object(group, version, namespace, plural, deployment_name)
-        # env_list = deployed_spec["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"]
-        # env_dict = {var["name"]: var["value"] for var in env_list}
-        # deployed_training_id = env_dict["TRAINING_ID"]
-        # if params["training_id"] == deployed_training_id:
-        #     return deployed_spec["status"]["state"].upper()  # "READY"
-        if "status" in deployed_spec:
-            return deployed_spec["status"]["state"].upper()
+        env_list = deployed_spec["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"]
+        env_dict = {var["name"]: var["value"] for var in env_list}
+        deployed_training_id = env_dict["TRAINING_ID"]
+        if params["training_id"] == deployed_training_id and "status" in deployed_spec:
+            return deployed_spec["status"]["state"].upper()  # "CREATING...", "FAILED", ...
     else:
         LOG.info("Could not find a Seldon deployment with name '%s'" % deployment_name)
 
@@ -239,6 +254,12 @@ def get_deployment_url(params):
     name = get_deployment_name(params)
     url = "http://%s:%s/seldon/%s/api/v0.1/predictions" % (ip, port, name)
     return url
+
+
+def is_deployment_available(params):
+    url = get_deployment_url(params)
+    response = requests.options(url)
+    return response.status_code == 200
 
 
 def get_http_method(params):
