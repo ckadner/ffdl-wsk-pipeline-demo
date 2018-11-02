@@ -1,0 +1,16 @@
+{
+    "ffdl_service_url": "http://123.45.67.89:12345",
+    "basic_authtoken": "test",
+    "watson_auth_token": "bluemix-instance-id=test-user",
+    "aws_endpoint_url": "https://s3-api.us-geo.objectstorage.softlayer.net",
+    "aws_access_key_id": "123abc_here_goes_your_access_key_id",
+    "aws_secret_access_key": "123abc_here_goes_your_secret_access_key",
+    "training_data_bucket": "gender-data",
+    "training_results_bucket": "gender-results",
+    "fairnesscheck_data_bucket": "gender-data",
+    "fairnesscheck_results_bucket": "gender-results",
+    "model_id": "training-hFst1FamR",
+    "memory": "2Gb",
+    "cpus": 2,
+    "gpus": 0
+}
