@@ -3,7 +3,7 @@
 WSK_CLI="bx wsk"
 #WSK_CLI="~/Projects/incubator-openwhisk-devtools/docker-compose/openwhisk-master/bin/wsk -i"
 
-ACTION_NAME="fairness_check"
+ACTION_NAME="fairness_check_ffdl"
 
 WEB_SECRET="fiddle"
 
