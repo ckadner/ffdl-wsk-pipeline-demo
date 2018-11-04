@@ -1,4 +1,4 @@
-# OpenWhisk action to perform a model robustness check with ART on FfDL
+# OpenWhisk action to perform a model fairness check with AIF360 on FfDL
 
 import json, requests
 

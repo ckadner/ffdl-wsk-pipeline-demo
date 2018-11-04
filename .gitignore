@@ -7,6 +7,7 @@ virtualenv/
 
 *.npz
 model.zip
+*.tar.gz
 parameters*.json
 
 kube-config.yml
@@ -15,4 +16,3 @@ kube-config.yml
 tmp/
 
 .DS_Store
-*.tar.gz
