@@ -7,6 +7,7 @@
     "model_file_name": "keras_original_model.hdf5",
     "training_id": "training-4dKQZX2mg",
     "deployment_name": "training-4dKQZX2mg",
+    "container_image": "tomcli/seldon-core-s2i-python3:0.4",
     "check_status_only": false,
     "delete_deployment": false
 }

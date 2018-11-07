@@ -83,19 +83,20 @@ def get_seldon_spec(params):
 def update_seldon_spec(params):
     spec = get_seldon_spec(params)
 
-    # consider using jsonpath_ng or jmespath
-    # env = parse("$.spec.predictors[0].componentSpecs[0].spec.containers[0].env")
-    env_as_list = spec["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"]
-    env_as_dict = {var["name"]: var["value"] for var in env_as_list}
+    if "container_image" in params:
+        spec["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["image"] = params["container_image"]
 
-    env_as_dict["MODEL_FILE_NAME"] = params["model_file_name"]
-    env_as_dict["TRAINING_ID"] = params["training_id"]
-    env_as_dict["BUCKET_NAME"] = params["training_results_bucket"]
-    env_as_dict["BUCKET_ENDPOINT_URL"] = params["aws_endpoint_url"]
-    env_as_dict["BUCKET_KEY"] = params['aws_access_key_id']
-    env_as_dict["BUCKET_SECRET"] = params['aws_secret_access_key']
+    env_list = spec["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"]
+    env_dict = {var["name"]: var["value"] for var in env_list}
 
-    env_updated = [{"name": key, "value": value} for key, value in env_as_dict.items()]
+    env_dict["MODEL_FILE_NAME"] = params["model_file_name"]
+    env_dict["TRAINING_ID"] = params["training_id"]
+    env_dict["BUCKET_NAME"] = params["training_results_bucket"]
+    env_dict["BUCKET_ENDPOINT_URL"] = params["aws_endpoint_url"]
+    env_dict["BUCKET_KEY"] = params['aws_access_key_id']
+    env_dict["BUCKET_SECRET"] = params['aws_secret_access_key']
+
+    env_updated = [{"name": key, "value": value} for key, value in env_dict.items()]
     spec["spec"]["predictors"][0]["componentSpecs"][0]["spec"]["containers"][0]["env"] = env_updated
 
     return spec
