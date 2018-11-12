@@ -1,13 +1,12 @@
 import os
 import sys
+import json
 import numpy as np
 import numpy.linalg as la
-import json
-
 from keras.models import model_from_json
-from art.classifiers.keras import KerasClassifier
 from keras.utils import np_utils
 from art.attacks.fast_gradient import FastGradientMethod
+from art.classifiers.keras import KerasClassifier
 
 
 def get_metrics(model, x_original, x_adv_samples, y):
@@ -24,7 +23,7 @@ def get_metrics(model, x_original, x_adv_samples, y):
     conf_metric = get_confidence_metric(y_pred, y_pred_adv)
 
     data = {
-        "model accuracy on test data:": float(model_accuracy_on_non_adversarial_samples),
+        "model accuracy on test data": float(model_accuracy_on_non_adversarial_samples),
         "model accuracy on adversarial samples": float(model_accuracy_on_adversarial_samples),
         "reduction in confidence": float(conf_metric),
         "average perturbation": float(pert_metric)
